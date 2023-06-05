@@ -11,6 +11,8 @@ import {
   Image,
   ImageBackground,
 } from 'react-native';
+import MashButton from './CustomButton';
+import Header from './Header';
 
 const App = () => {
   const [name, SetName] = useState('');
@@ -30,6 +32,7 @@ const App = () => {
       source={{
         uri: 'https://cdn.pixabay.com/photo/2013/07/12/12/35/texture-145968_960_720.png',
       }}>
+      <Header />
       <Modal
         visible={showWarning}
         transparent
@@ -61,22 +64,36 @@ const App = () => {
         placeholder="e.g. John"
         onChangeText={value => SetName(value)}
       />
-      <Pressable
+      <MashButton
+        onPressFunction={onPressHandler}
+        title={submitted ? 'Clear' : 'Submit'}
+        color={'#00ff00'}
+      />
+      <MashButton
+        onPressFunction={() => {}}
+        title={'Test'}
+        color={'#ff00ff'}
+        style={{margin: 10}}
+      />
+      {/* <Pressable
         onPress={onPressHandler}
-        hitSlop={{top: 10, bottom: 10, right: 10, left: 10}}
-        android_ripple={{color: '#00f'}}
-        style={({pressed}) => [
-          {backgroundColor: pressed ? '#dddddd' : '#00ff00'},
-          styles.button,
-        ]}>
-        <Text style={styles.text}>{submitted ? 'Clear' : 'Submit'}</Text>
-      </Pressable>
+        hitSlop={{ top: 10, bottom: 10, right: 10, left: 10 }}
+        android_ripple={{ color: '#00f' }}
+        style={({ pressed }) => [
+          { backgroundColor: pressed ? '#dddddd' : '#00ff00' },
+          styles.button
+        ]}
+      >
+        <Text style={styles.text}>
+          {submitted ? 'Clear' : 'Submit'}
+        </Text>
+      </Pressable> */}
       {submitted ? (
         <View style={styles.body}>
           <Text style={styles.text}>You are registered as {name}</Text>
           <Image
             style={styles.image}
-            source={require('./assets/done.png')}
+            source={require('../assets/done.png')}
             resizeMode="stretch"
           />
         </View>
