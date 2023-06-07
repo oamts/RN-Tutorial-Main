@@ -3,8 +3,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import ScreenA from './ScreenA';
-import ScreenB from './ScreenB';
+import ScreenA from './screens/ScreenA';
+import ScreenB from './screens/ScreenB';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 // const Tab = createBottomTabNavigator();
@@ -42,7 +42,11 @@ function App() {
           inactiveColor="#3e2465"
           barStyle={{backgroundColor: '#694fad'}}>
           <Tab.Screen name="Screen_A" component={ScreenA} />
-          <Tab.Screen name="Screen_B" component={ScreenB} />
+          <Tab.Screen
+            name="Screen_B"
+            component={ScreenB}
+            initialParams={{ItemName: 'Item from Drawer', ItemId: 12}}
+          />
         </Tab.Navigator>
       }
     </NavigationContainer>
