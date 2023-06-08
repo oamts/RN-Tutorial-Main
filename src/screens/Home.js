@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text, Alert, TextInput} from 'react-native';
+import {StyleSheet, View, Text, Alert, TextInput, FlatList} from 'react-native';
 import CustomButton from '../utils/CustomButton';
 import GlobalStyle from '../utils/GlobalStyle';
 import SQLite from 'react-native-sqlite-storage';
 import {useSelector, useDispatch} from 'react-redux';
-import {setName, setAge, increaseAge} from '../redux/actions';
+import {setName, setAge, increaseAge, getCities} from '../redux/actions';
 
 const db = SQLite.openDatabase(
   {
@@ -19,7 +19,7 @@ const db = SQLite.openDatabase(
 );
 
 export default function Home({navigation, route}) {
-  const {name, age} = useSelector(state => state.userReducer);
+  const {name, age, cities} = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
 
   // const [name, setName] = useState('');
@@ -27,6 +27,7 @@ export default function Home({navigation, route}) {
 
   useEffect(() => {
     getData();
+    dispatch(getCities());
   }, []);
 
   const getData = () => {
@@ -107,32 +108,43 @@ export default function Home({navigation, route}) {
       <Text style={[GlobalStyle.CustomFont, styles.text]}>
         Welcome {name} !
       </Text>
-      <Text style={[GlobalStyle.CustomFont, styles.text]}>
-        Your age is {age}
-      </Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter your name"
-        value={name}
-        onChangeText={value => dispatch(setName(value))}
+      <FlatList
+        data={cities}
+        renderItem={({item}) => (
+          <View style={styles.item}>
+            <Text style={styles.title}>{item.country}</Text>
+            <Text style={styles.subtitle}>{item.city}</Text>
+          </View>
+        )}
+        keyExtractor={(item, index) => index.toString()}
       />
-      <CustomButton
-        title="Update"
-        color="#ff7f00"
-        onPressFunction={updateData}
-      />
-      <CustomButton
-        title="Remove"
-        color="#f40100"
-        onPressFunction={removeData}
-      />
-      <CustomButton
-        title="Increase Age"
-        color="#0080ff"
-        onPressFunction={() => {
-          dispatch(increaseAge());
-        }}
-      />
+      {/* <Text style={[
+                GlobalStyle.CustomFont,
+                styles.text
+            ]}>
+                Your age is {age}
+            </Text>
+            <TextInput
+                style={styles.input}
+                placeholder='Enter your name'
+                value={name}
+                onChangeText={(value) => dispatch(setName(value))}
+            />
+            <CustomButton
+                title='Update'
+                color='#ff7f00'
+                onPressFunction={updateData}
+            />
+            <CustomButton
+                title='Remove'
+                color='#f40100'
+                onPressFunction={removeData}
+            />
+            <CustomButton
+                title='Increase Age'
+                color='#0080ff'
+                onPressFunction={()=>{dispatch(increaseAge())}}
+            /> */}
     </View>
   );
 }
@@ -156,5 +168,24 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginTop: 130,
     marginBottom: 10,
+  },
+  item: {
+    backgroundColor: '#ffffff',
+    borderWidth: 2,
+    borderColor: '#cccccc',
+    borderRadius: 5,
+    margin: 7,
+    width: 350,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 30,
+    margin: 10,
+  },
+  subtitle: {
+    fontSize: 20,
+    margin: 10,
+    color: '#999999',
   },
 });
