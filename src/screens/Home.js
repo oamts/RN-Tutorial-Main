@@ -5,6 +5,7 @@ import SQLite from 'react-native-sqlite-storage';
 import {useSelector, useDispatch} from 'react-redux';
 import {setName, setAge, getCities} from '../redux/actions';
 import PushNotification from 'react-native-push-notification';
+import CustomButton from '../utils/CustomButton';
 
 const db = SQLite.openDatabase(
   {
@@ -17,7 +18,7 @@ const db = SQLite.openDatabase(
   },
 );
 
-export default function Home() {
+export default function Home({navigation}) {
   const {name, age, cities} = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
 
@@ -58,19 +59,39 @@ export default function Home() {
       color: 'red',
       id: index,
     });
+
+    // PushNotification.localNotificationSchedule({
+    //     channelId: "test-channel",
+    //     title: "Alarm",
+    //     message: "You clicked on " + item.country + " 20 seconds ago",
+    //     date: new Date(Date.now() + 20 * 1000),
+    //     allowWhileIdle: true,
+    // });
   };
 
   return (
     <View style={styles.body}>
       <Text style={[GlobalStyle.CustomFont, styles.text]}>
-        rr Welcome {name} !
+        Welcome {name} !
       </Text>
+      <CustomButton
+        title="Open Camera"
+        color="#0080ff"
+        onPressFunction={() => {
+          navigation.navigate('Camera');
+        }}
+      />
       <FlatList
         data={cities}
         renderItem={({item, index}) => (
           <TouchableOpacity
             onPress={() => {
               handleNotification(item, index);
+              navigation.navigate('Map', {
+                city: item.city,
+                lat: item.lat,
+                lng: item.lng,
+              });
             }}>
             <View style={styles.item}>
               <Text style={styles.title}>{item.country}</Text>
